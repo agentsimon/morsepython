@@ -1,41 +1,27 @@
-// Serial test script
+int led = 2;
 
-int setPoint = 55;
-String readString;
-
-void setup()
+void setup() 
 {
-
-  Serial.begin(9600);  // initialize serial communications at 9600 bps
-
+  pinMode(2, OUTPUT);
+  Serial.begin(9600);
+  while (!Serial);
+  Serial.println("Input 1 to Turn LED on and 2 to off");
 }
 
 void loop()
 {
-  while(!Serial.available()) {}
-  // serial read section
-  while (Serial.available())
+  if (Serial.available())
   {
-    if (Serial.available() >0)
+    int state = Serial.parseInt();
+    if (state == 1)
     {
-      char c = Serial.read();  //gets one byte from serial buffer
-      readString += c; //makes the string readString
+     digitalWrite(led, LOW);
+     Serial.println("Command completed LED turned ON");
     }
+    if (state == 0)
+    {
+     digitalWrite(led, HIGH);
+     Serial.println("Command completed LED turned OFF");
+    }  
   }
-
-  if (readString.length() >0)
-  {
-    Serial.print("Arduino received: ");  
-    Serial.println(readString); //see what was received
-  }
-
-  delay(500);
-
-  // serial write section
-
-  char ard_sends = 'Got it 3';
-  Serial.print("Arduino sends: ");
-  Serial.println(ard_sends);
-  Serial.print("\n");
-  Serial.flush();
 }
